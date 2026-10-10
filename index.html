@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GymRank</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0c1b;--card:#1f1d33;--tx:#f2f2fa;--mu:#9a98b5;--bl:#5bb8fa;--gr:#2bb55f;--or:#f59a2b;--bd:#2c2a47;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#0e0c1b}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:#0e0c1b;color:var(--tx);font-family:Nunito,system-ui,sans-serif}
+#app{max-width:520px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--bd)}
+.lv{flex:1}.lv b{font-size:14px}.bar{height:10px;border:2px solid var(--bl);border-radius:8px;margin-top:3px;overflow:hidden}.bar i{display:block;height:100%;background:var(--bl)}
+.chip{font-weight:800}
+main{flex:1;overflow-y:auto;padding:16px}
+nav{display:flex;border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px);background:#0e0c1b}
+nav button{flex:1;background:none;border:0;color:var(--mu);padding:10px 0;font:700 12px Nunito,sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button span{font-size:22px}nav button.on{color:var(--bl);background:#171529}
+h2{font-size:24px;margin:6px 0 12px}h3{margin:20px 0 8px;font-size:18px}
+.card{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.grid .card{margin:0}.mu{color:var(--mu);font-size:13px}.big{font-size:26px;font-weight:800}
+.btn{display:block;width:100%;background:var(--bl);color:#0e0c1b;border:0;border-radius:14px;padding:13px;font:800 16px Nunito,sans-serif;box-shadow:0 4px 0 #3b8cc4}
+.btn.g{background:var(--gr);color:#fff;box-shadow:0 4px 0 #1d7f43}
+.btn.s{background:#35335a;color:var(--tx);box-shadow:none;width:auto;padding:8px 12px;font-size:14px;display:inline-block}
+input,select{width:100%;background:#13112a;color:var(--tx);border:2px solid var(--bd);border-radius:12px;padding:11px;font:700 16px Nunito,sans-serif;margin-bottom:8px}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.hex{width:54px;height:60px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);display:grid;place-items:center;font-size:24px;flex:none}
+.mr{display:flex;align-items:center;gap:12px}.mr div:nth-child(2){flex:1}.mr b{font-size:17px}
+.pg{height:8px;background:#13112a;border-radius:6px;margin-top:6px;overflow:hidden}.pg i{display:block;height:100%}
+.set{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)}
+.set:last-child{border:0}
+.wk{background:#1d6b2f;border-radius:16px;padding:16px;margin-bottom:12px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal div{background:var(--card);border-radius:10px;padding:10px 0;font-weight:700}.cal .d{background:var(--gr)}.cal .t{outline:2px solid var(--bl)}
+.tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto}
+.tabs .btn{width:auto;flex:none}
+.av img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.av{overflow:hidden;font-size:40px;width:68px;height:68px;border-radius:50%;background:#13112a;display:grid;place-items:center;border:3px solid var(--bl);flex:none}
+.pick{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.pick button{font-size:22px;background:#13112a;border:2px solid var(--bd);border-radius:12px;padding:6px 8px;color:var(--tx)}.pick button.on{border-color:var(--bl);background:#25234a}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid transparent;padding:0}.sw.on{border-color:#fff}
+.bdg{text-align:center;font-size:11px;padding:10px 4px}.bdg span{font-size:28px;display:block}.bdg.off{opacity:.3;filter:grayscale(1)}
+.gl{display:flex;gap:6px}.gl button{flex:1;background:#13112a;border:2px solid var(--bd);border-radius:10px;padding:8px 0;color:var(--tx);font:800 14px Nunito,sans-serif}.gl button.on{background:var(--bl);border-color:var(--bl);color:#0e0c1b}
+.gl .w{font-size:22px}
+#bp{position:fixed;z-index:10;background:var(--card);border:2px solid var(--bl);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.5)}#bp span{color:var(--mu)}#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 70px);transform:translate(-50%,-20px);background:var(--card);border:2px solid var(--bl);padding:10px 16px;border-radius:14px;font-weight:800;opacity:0;transition:.3s;z-index:9;pointer-events:none;text-align:center;max-width:90%}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.cf{position:fixed;top:-30px;font-size:22px;z-index:8;pointer-events:none;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.8}}
+#rt{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);background:var(--bl);color:#0e0c1b;font-weight:800;border-radius:24px;padding:10px 16px;display:none;z-index:7}
+.bmi{height:10px;border-radius:6px;background:linear-gradient(90deg,#5bb8fa 0 18%,#2bb55f 18% 50%,#f59a2b 50% 70%,#e5484d 70%);position:relative;margin:12px 0 6px}.bmi i{position:absolute;top:-5px;width:6px;height:20px;border-radius:3px;background:#fff}
+.grp{background:var(--card);border-radius:14px;margin-bottom:18px;overflow:hidden}
+.it{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--bd);cursor:pointer}
+.grp .it:last-child{border-bottom:0}.it:active{background:#25234a}
+.ic{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-size:17px;flex:none}
+.it .tt{flex:1;font-weight:700;font-size:16px}.it .vl{font-size:14px}.it .ch{color:var(--mu);font-size:22px;line-height:1}
+.it.pf{padding:14px}.dot{display:inline-block;width:18px;height:18px;border-radius:50%;vertical-align:middle}
+.bk{color:var(--bl);font-weight:800;font-size:16px;padding:4px 0;cursor:pointer}
+</style></head><body>
+<div id="app">
+<header><div class="lv" id="lv"></div><div class="chip" id="st"></div></header>
+<main id="m"></main>
+<nav id="nv"></nav><div id="toast"></div><div id="rt" onclick="clearInterval(rest.h);this.style.display='none'"></div>
+</div>
+<script>
+var EX=[["Bench Press","Dada"],["Incline Dumbbell Press","Dada"],["Push Up","Dada"],["Pull Up","Punggung"],["Barbell Row","Punggung"],["Lat Pulldown","Punggung"],["Overhead Press","Bahu"],["Lateral Raise","Bahu"],["Squat","Kaki"],["Leg Press","Kaki"],["Romanian Deadlift","Kaki"],["Barbell Curl","Lengan"],["Triceps Pushdown","Lengan"],["Plank (detik)","Core"],["Crunch","Core"]];
+var MG=["Dada","Punggung","Bahu","Lengan","Kaki","Core"];
+
+var MI={
+Dada:'<path d="M2.500 6.500C5 4 8.500 3 12 3s7 1 9.500 3.500L20 11c-1 4-4.500 7-8 7s-7-3-8-7z"/><path d="M12 4v10" stroke="#171529" stroke-width="1.300" fill="none"/><path d="M3.500 10.500c3 3.500 6 3.500 8.500 1.200 2.500 2.300 5.500 2.300 8.500-1.200" stroke="#171529" stroke-width="1.300" fill="none"/><path d="M5.500 20h13M8 22h8" stroke="currentColor" stroke-width="1.500" stroke-linecap="round" fill="none"/>',
+Punggung:'<path d="M1.500 6L7 3h10l5.500 3-2.500 7L16 16.500V21H8v-4.500L4 13z"/><path d="M12 3v18" stroke="#171529" stroke-width="1.200"/><path d="M7 3l5 5.500L17 3" stroke="#171529" stroke-width="1.200" fill="none"/><path d="M4.500 8.500L9.500 16M19.500 8.500L14.500 16M7 11l4 1.500M17 11l-4 1.500" stroke="#171529" stroke-width="1.100" fill="none"/>',
+Bahu:'<path d="M9.500 2.500h5l2 4.500H7.500z"/><ellipse cx="5" cy="11.500" rx="3.600" ry="5"/><ellipse cx="19" cy="11.500" rx="3.600" ry="5"/><path d="M8.500 8h7v13h-7z"/><path d="M3.500 8c1 2 1 6 0 8M6.500 7.500c1 2.500 1 6.500 0 9M20.500 8c-1 2-1 6 0 8M17.500 7.500c-1 2.500-1 6.500 0 9M12 8v12" stroke="#171529" stroke-width="1" fill="none" stroke-linecap="round"/>',
+Lengan:'<rect x="13.500" y="2" width="7" height="6" rx="2.500"/><path d="M14 8.500h6L19.500 12c2 2.500 2 6.500.5 9H3v-5.500C3 12 6 9.500 9.500 10c1-2 3.200-2.300 4.500-1.500z"/><path d="M8 16c2-3 6-3.500 9-1" stroke="#171529" stroke-width="1.300" fill="none" stroke-linecap="round"/><path d="M14 8.500l1 3.500" stroke="#171529" stroke-width="1" fill="none"/>',
+Kaki:'<path d="M4 2h7.500l-.5 9-1 3.500.5 7.500H6.500L7 14.500 5 10z"/><path d="M12.500 2H20l-1 8-2 4.500.5 7.500h-4l.5-7.500-1-3.500z"/><path d="M8 4c.5 3 .8 6 .5 9M16 4c-.5 3-.8 6-.5 9M6.800 17h3.200M14 17h3.200" stroke="#171529" stroke-width="1.100" fill="none" stroke-linecap="round"/>',
+Core:'<rect x="6.500" y="3" width="4.500" height="4.500" rx="1.500"/><rect x="13" y="3" width="4.500" height="4.500" rx="1.500"/><rect x="6.500" y="9" width="4.500" height="4.500" rx="1.500"/><rect x="13" y="9" width="4.500" height="4.500" rx="1.500"/><rect x="7" y="15" width="4" height="5" rx="1.500"/><rect x="13" y="15" width="4" height="5" rx="1.500"/><path d="M4 5c-1 4-.5 9 2 15M20 5c1 4 .5 9-2 15" stroke="currentColor" stroke-width="1.500" stroke-linecap="round" fill="none"/>'
+};
+var _sid=0;
+function mi(g,c,z){return'<svg viewBox="0 0 24 24" width="'+z+'" height="'+z+'" fill="'+c+'" style="color:'+c+'">'+MI[g]+'</svg>'}
+function shield(c,i,g,w){var id="sg"+(++_sid),h=Math.round(w*1.15),pips="";
+ for(var k=0;k<=i;k++){var sx=30+(k-i/2)*7,sy=57.500,sp=[];for(var q=0;q<10;q++){var ang=-Math.PI/2+q*Math.PI/5,rr=q%2?1.500:3.600;sp.push((sx+rr*Math.cos(ang)).toFixed(2)+","+(sy+rr*Math.sin(ang)).toFixed(2))}pips+='<polygon points="'+sp.join(" ")+'" fill="'+c+'"/>'}
+ var inner=g?'<g transform="translate(15 13) scale(1.25)" fill="'+c+'" style="color:'+c+'">'+MI[g]+'</g>':'<path d="M30 17l3.8 8.2 9 1-6.7 6.1 1.9 8.9L30 36.600l-8 4.600 1.900-8.900-6.700-6.100 9-1z" fill="'+c+'"/>';
+ return'<svg viewBox="0 0 60 70" width="'+w+'" height="'+h+'" style="flex:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))"><defs><linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".35" stop-color="'+c+'"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient></defs><path d="M30 2L56 12v24c0 16-12 27-26 32C16 63 4 52 4 36V12z" fill="url(#'+id+')"/><path d="M30 7.500L51 15.500v20.500c0 13-9.500 22-21 26.500C18.500 58 9 49 9 36V15.500z" fill="#171529"/>'+inner+(g?pips:'')+'</svg>'}
+var TIERS=[["WOOD",0,"#b8742a"],["BRONZE",200,"#cd7f32"],["SILVER",800,"#c0c8d4"],["GOLD",2600,"#f5c542"],["PLATINUM",8000,"#7fe3d6"],["DIAMOND",24200,"#6fd2ff"]];
+function DEF(){return{name:"Atlet",av:"f1",age:25,ht:170,sex:"Pria",wkt:4,acc:"#5bb8fa",water:{},logs:[],bw:[],goal:60,meals:[],cal:2100,tab:"home",sub:"ranks"}}
+var S=DEF();
+try{var r=localStorage.getItem("gymrank");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+function save(){try{localStorage.setItem("gymrank",JSON.stringify(S))}catch(e){}}
+function day(t){var d=new Date(t||Date.now());return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
+function mgOf(n){for(var i=0;i<EX.length;i++)if(EX[i][0]==n)return EX[i][1]}
+function vol(l){return l.w*l.r}
+function pts(g){return S.logs.filter(function(l){return mgOf(l.ex)==g}).reduce(function(a,l){return a+vol(l)},0)}
+function tier(p){var t=0;for(var i=0;i<TIERS.length;i++)if(p>=TIERS[i][1])t=i;return t}
+function xp(){return S.logs.length*10}
+function lvOf(x){return Math.floor(Math.sqrt(x/10))+1}
+function lvBase(L){return 10*(L-1)*(L-1)}
+function lvPct(x){var L=lvOf(x),a=lvBase(L),b=lvBase(L+1);return Math.round((x-a)/(b-a)*100)}
+function streak(){var ds={};S.logs.forEach(function(l){ds[day(l.t)]=1});var n=0,d=new Date();if(!ds[day(d)])d.setDate(d.getDate()-1);while(ds[day(d)]){n++;d.setDate(d.getDate()-1)}return n}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function $(i){return document.getElementById(i)}
+function num(i){return parseFloat($(i).value)||0}
+function go(t){S.tab=t;S.ss="";draw()}
+function sub(s){S.sub=s;draw()}
+
+function prev(){var el=$("pv");if(!el)return;var ex=$("ex").value,g=mgOf(ex),w=num("w"),r=num("r");
+ if(!r){el.innerHTML='<div class="mu">Isi beban & repetisi untuk melihat preview peringkat.</div>';return}
+ var p=pts(g),n=p+w*r,i=tier(p),j=tier(n),T=TIERS[j],nx=TIERS[j+1],pc=nx?Math.round((n-T[1])/(nx[1]-T[1])*100):100;
+ var up=j>i;
+ el.innerHTML='<div class="mr"><div style="flex:none">'+shield(T[2],j,g,56)+'</div><div><b>'+g+'</b> <span class="mu">+'+(w*r)+' kg volume</span><div style="color:'+T[2]+';font-weight:800">'+(up?TIERS[i][0]+' → '+T[0]+' 🎉':T[0])+'</div><div class="pg"><i style="width:'+pc+'%;background:'+T[2]+'"></i></div><div class="mu">'+n+(nx?' / '+nx[1]:'')+' kg volume'+(nx?' · sisa '+(nx[1]-n)+' kg ke '+nx[0]:'')+'</div>'+(w>0?'<div class="mu">Estimasi 1RM: <b>'+Math.round(w*(1+r/30))+' kg</b></div>':'')+'</div></div>'}
+function addSet(){var ex=$("ex").value,w=num("w"),r=num("r");if(!r){alert("Isi jumlah repetisi");return}
+ var g=mgOf(ex),ti=tier(pts(g)),lv0=lvOf(xp()),b0=badges().filter(function(b){return b[2]}).length;
+ S.logs.push({ex:ex,w:w,r:r,t:Date.now()});save();draw();
+ var tj=tier(pts(g)),b1=badges().filter(function(b){return b[2]}).length;
+ if(tj>ti){boom();toast("🎉 "+g+" naik ke "+TIERS[tj][0]+"!")}else if(lvOf(xp())>lv0){boom();toast("⬆️ Level naik!")}else if(b1>b0){boom();toast("🏅 Lencana baru terbuka!")}else toast("+10 XP · +"+(w*r)+" kg volume")}
+function delSet(i){S.logs.splice(i,1);save();draw()}
+function addBW(){var v=num("bwv");if(!v)return;S.bw.push({v:v,t:Date.now()});save();draw()}
+function setGoal(){var v=num("gv");if(v){S.goal=v;save();draw()}}
+function addMeal(){var n=$("mn").value.trim(),c=num("mc");if(!n||!c)return;S.meals.push({n:n,c:c,p:num("mp"),t:Date.now()});save();draw()}
+function delMeal(i){S.meals.splice(i,1);save();draw()}
+function setCal(){var v=num("cv");if(v){S.cal=v;save();draw()}}
+function setName(){var v=$("nm").value.trim();if(v){S.name=v;save();draw()}}
+function reset(){if(confirm("Hapus semua data?")){S=DEF();save();draw()}}
+
+var FD=[{k:"f1",sk:"#f1c9a5",hr:"#2b1b12",st:"short",g:"m",bd:1},{k:"f2",sk:"#8d5a3b",hr:"#120c0a",st:"long",g:"f"},{k:"f3",sk:"#e8b98f",hr:"#6b4423",st:"bob",g:"f",gl:1},{k:"f4",sk:"#5a3825",hr:"#0d0907",st:"fade",g:"m",bd:1},{k:"f5",sk:"#f6d7bd",hr:"#c9a35a",st:"bun",g:"f"},{k:"f6",sk:"#c68a5e",hr:"#1a120d",st:"hijab",g:"f",hc:"#5b6ee1"},{k:"f7",sk:"#d9a77c",hr:"#3a3a3f",st:"short",g:"m",gl:1},{k:"f8",sk:"#b57a50",hr:"#1b1310",st:"curly",g:"f"}];
+function faceSvg(d){var b='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a3770"/><stop offset="1" stop-color="#1c1a3c"/></linearGradient></defs><rect width="100" height="100" fill="url(#bg)"/>';var sh=d.g=="m"?"#5bb8fa":"#f25c8a";if(d.st=="hijab")sh=d.hc;
+b+='<path d="M12 100Q14 76 50 74Q86 76 88 100Z" fill="'+sh+'"/><rect x="43" y="62" width="14" height="16" rx="5" fill="'+d.sk+'"/>';
+var h=d.hr;
+if(d.st=="long")b+='<path d="M24 46Q22 14 50 14Q78 14 76 46L80 88L66 88L66 50L34 50L34 88L20 88Z" fill="'+h+'"/>';
+if(d.st=="bob")b+='<path d="M22 50Q18 14 50 13Q82 14 78 50L78 70L66 70L66 46L34 46L34 70L22 70Z" fill="'+h+'"/>';
+if(d.st=="curly")b+='<g fill="'+h+'"><circle cx="28" cy="40" r="13"/><circle cx="72" cy="40" r="13"/><circle cx="36" cy="25" r="13"/><circle cx="50" cy="20" r="13"/><circle cx="64" cy="25" r="13"/><circle cx="24" cy="56" r="9"/><circle cx="76" cy="56" r="9"/></g>';
+if(d.st=="bun")b+='<circle cx="50" cy="12" r="9" fill="'+h+'"/>';
+if(d.st=="hijab")b+='<path d="M50 10Q20 10 20 48Q20 80 36 86L64 86Q80 80 80 48Q80 10 50 10Z" fill="'+d.hc+'"/>';
+b+='<ellipse cx="50" cy="46" rx="22" ry="26" fill="'+d.sk+'"/><ellipse cx="28" cy="48" rx="3.5" ry="5.5" fill="'+d.sk+'"/><ellipse cx="72" cy="48" rx="3.5" ry="5.5" fill="'+d.sk+'"/>';
+if(d.st=="hijab")b+='<path d="M50 14Q27 16 27 48Q27 40 34 36Q50 30 66 36Q73 40 73 48Q73 16 50 14Z" fill="'+d.hc+'"/>';
+if(d.st=="short"||d.st=="fade")b+='<path d="M27 44Q24 16 50 16Q76 16 73 44Q68 30 50 30Q32 30 27 44Z" fill="'+h+'"/>';
+if(d.st=="long"||d.st=="bob")b+='<path d="M26 46Q28 17 50 17Q72 17 74 46Q64 28 50 30Q36 28 26 46Z" fill="'+h+'"/>';
+if(d.st=="bun")b+='<path d="M26 46Q26 17 50 17Q74 17 74 46Q62 30 50 31Q38 30 26 46Z" fill="'+h+'"/>';
+if(d.st=="curly")b+='<path d="M28 42Q34 26 50 28Q66 26 72 42Q60 34 50 35Q40 34 28 42Z" fill="'+h+'"/>';
+b+='<path d="M36 40Q41 37 46 40M54 40Q59 37 64 40" stroke="'+h+'" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+b+='<ellipse cx="41" cy="47" rx="3" ry="3.4" fill="#fff"/><ellipse cx="59" cy="47" rx="3" ry="3.4" fill="#fff"/><circle cx="41.4" cy="47.3" r="1.9" fill="#1b1310"/><circle cx="59.4" cy="47.3" r="1.9" fill="#1b1310"/>';
+b+='<path d="M50 49Q47 57 50 59Q52 59 53 58" stroke="rgba(0,0,0,.25)" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+if(d.bd)b+='<path d="M29 54Q30 76 50 77Q70 76 71 54Q66 66 50 66Q34 66 29 54Z" fill="'+h+'"/><path d="M42 67Q50 71 58 67" stroke="#fff" stroke-opacity=".55" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+else b+='<path d="M41 66Q50 73 59 66" stroke="#8a3a3a" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
+if(d.gl)b+='<g fill="none" stroke="#222" stroke-width="1.8"><circle cx="41" cy="47" r="7"/><circle cx="59" cy="47" r="7"/><path d="M48 47H52"/></g>';
+return b+'</svg>'}
+var FACE={};FD.forEach(function(d){FACE[d.k]='data:image/svg+xml;utf8,'+encodeURIComponent(faceSvg(d))});
+var AV=FD.map(function(d){return d.k}),COL=["#5bb8fa","#2bb55f","#f59a2b","#f25c8a","#a78bfa"];
+var BD=["Catat 1 set latihan","Catat total 100 set latihan","Latihan 3 hari berturut-turut","Latihan 7 hari berturut-turut","Capai tier Silver di salah satu grup otot","Capai minimal Bronze di semua grup otot","Catat 1 makanan","Catat 1 berat badan"];
+function bpop(el,i){var o=document.getElementById("bp");if(o){var same=o.getAttribute("data-i")==i;o.remove();if(same)return}var b=badges()[i],r=el.getBoundingClientRect(),d=document.createElement("div");d.id="bp";d.setAttribute("data-i",i);d.innerHTML="<b>"+b[0]+" "+b[1]+(b[2]?" ✅":" 🔒")+"</b><br><span>Cara mendapatkan: "+BD[i]+"</span>";document.body.appendChild(d);var w=Math.min(220,window.innerWidth-16),l=Math.max(8,Math.min(window.innerWidth-w-8,r.left+r.width/2-w/2));d.style.width=w+"px";d.style.left=l+"px";var h=d.offsetHeight,t=r.bottom+6;if(t+h>window.innerHeight-8)t=r.top-h-6;d.style.top=Math.max(8,t)+"px"}
+document.addEventListener("click",function(e){var o=document.getElementById("bp");if(o&&!e.target.closest(".bdg")&&!o.contains(e.target))o.remove()});
+window.addEventListener("scroll",function(){var o=document.getElementById("bp");if(o)o.remove()},true);
+function toast(m){var t=$("toast");t.textContent=m;t.className="on";clearTimeout(toast.h);toast.h=setTimeout(function(){t.className=""},2200)}
+function boom(){var e=["🎉","⭐","✨","💪","🔥"];for(var i=0;i<28;i++){var s=document.createElement("span");s.className="cf";s.textContent=e[i%5];s.style.left=Math.random()*95+"%";s.style.animationDelay=Math.random()*.5+"s";document.body.appendChild(s);setTimeout(function(x){x.remove()},2600,s)}}
+function rest(sec){clearInterval(rest.h);var e=$("rt"),n=sec;e.style.display="block";function t(){if(n<=0){clearInterval(rest.h);e.textContent="💪 Lanjut set!";if(navigator.vibrate)navigator.vibrate(300);setTimeout(function(){if(e.textContent.indexOf("Lanjut")>-1)e.style.display="none"},2500);return}e.textContent="⏱ Istirahat "+n+"s ✕";n--}t();rest.h=setInterval(t,1000)}
+function pick(k,v){S[k]=v;if(k=="av")S.photo="";save();draw()}
+function avs(){return FACE[S.av]?'<img src="'+FACE[S.av]+'" alt="" style="width:1.2em;height:1.2em;border-radius:50%;vertical-align:-.25em">':S.av}
+function avi(){return S.photo?'<img src="'+S.photo+'" alt="">':FACE[S.av]?'<img src="'+FACE[S.av]+'" alt="">':S.av}
+function pickPhoto(inp){var f=inp.files&&inp.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var im=new Image();im.onload=function(){var z=192,c=document.createElement("canvas");c.width=c.height=z;var s=Math.min(im.width,im.height),x=(im.width-s)/2,y=(im.height-s)/2;c.getContext("2d").drawImage(im,x,y,s,s,0,0,z,z);S.photo=c.toDataURL("image/jpeg",0.85);save();draw()};im.src=rd.result};rd.readAsDataURL(f);inp.value=""}
+function delPhoto(){S.photo="";save();draw()}
+function stepWk(d){S.wkt=Math.max(1,Math.min(7,S.wkt+d));save();draw()}
+function setBody(){var a=num("ag"),h=num("ht");if(a)S.age=a;if(h)S.ht=h;save();draw();toast("Data tersimpan ✅")}
+function useCal(v){S.cal=v;save();draw();toast("Target kalori jadi "+v+" kal")}
+function setWater(n){S.water[day()]=n;save();draw();if(n>=8){boom();toast("Target minum tercapai 💧")}}
+function water(){var n=S.water[day()]||0,b="";for(var i=0;i<8;i++)b+='<button class="w '+(i<n?"on":"")+'" onclick="setWater('+(n==i+1?i:i+1)+')">💧</button>';return'<div class="card"><div class="mr"><b>Air minum</b><div class="mu" style="text-align:right">'+n+' / 8 gelas</div></div><div class="gl" style="margin-top:8px">'+b+'</div></div>'}
+function wkDone(){var ds={};S.logs.forEach(function(l){ds[day(l.t)]=1});var n=0;for(var i=0;i<7;i++){var d=new Date();d.setDate(d.getDate()-i);if(ds[day(d)])n++}return n}
+function ring(){var n=wkDone(),p=Math.min(1,n/S.wkt);return'<div class="card mr"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="30" fill="none" stroke="#13112a" stroke-width="9"/><circle cx="38" cy="38" r="30" fill="none" stroke="var(--bl)" stroke-width="9" stroke-linecap="round" stroke-dasharray="188.5" stroke-dashoffset="'+(188.5*(1-p))+'" transform="rotate(-90 38 38)"/></svg><div><b>Target mingguan</b><div class="mu">'+n+' / '+S.wkt+' hari latihan dalam 7 hari terakhir'+(n>=S.wkt?' · tercapai! 🎉':'')+'</div></div></div>'}
+function badges(){return[["🌱","Set pertama",S.logs.length>=1],["💯","100 set",S.logs.length>=100],["🔥","Streak 3",streak()>=3],["⚡","Streak 7",streak()>=7],["🥈","Ada Silver",MG.some(function(g){return tier(pts(g))>=2})],["💎","Semua Bronze",MG.every(function(g){return tier(pts(g))>=1})],["🍎","Catat makan",S.meals.length>=1],["⚖️","Catat berat",S.bw.length>=1]]}
+function back(){S.ss="";draw()}
+function ss(k){S.ss=k;draw()}
+function row(ic,bg,t,v,fn,red){return'<div class="it" onclick="'+fn+'"><div class="ic" style="background:'+bg+'">'+ic+'</div><div class="tt"'+(red?' style="color:#e5484d"':'')+'>'+t+'</div>'+(v?'<div class="mu vl">'+v+'</div>':'')+(red?'':'<div class="ch">›</div>')+'</div>'}
+function settings(){
+ var k=S.ss||"",h='';
+ if(!k){
+  h='<h2>Pengaturan</h2>';
+  h+='<div class="grp"><div class="it pf" onclick="ss(\'profil\')"><div class="av" style="width:56px;height:56px;font-size:30px">'+avi()+'</div><div class="tt"><b style="font-size:18px">'+esc(S.name)+'</b><div class="mu">Foto, avatar & nama</div></div><div class="ch">›</div></div></div>';
+  h+='<div class="grp">'+row("🧍","#5e5ce6","Data diri",S.age+" th · "+S.ht+" cm","ss(\'diri\')")+row("🏋️","#2bb55f","Target latihan",S.wkt+" hari/minggu","ss(\'latihan\')")+row("⚖️","#f59a2b","Target berat badan",S.goal+" kg","ss(\'berat\')")+row("🔥","#e5484d","Target kalori",S.cal+" kal","ss(\'kalori\')")+'</div>';
+  h+='<div class="grp">'+row("🎨","#f25c8a","Warna tema","<span class=\'dot\' style=\'background:"+S.acc+"\'></span>","ss(\'tema\')")+'</div>';
+  h+='<div class="grp">'+row("🗑️","#35335a","Hapus semua data","","reset()",1)+'</div>';
+  return h+'<div class="mu" style="text-align:center;margin:12px 0">GymRank</div>'}
+ var T={profil:"Profil",diri:"Data diri",latihan:"Target latihan",berat:"Target berat badan",kalori:"Target kalori",tema:"Warna tema"};
+ h='<div class="bk" onclick="back()">‹ Pengaturan</div><h2>'+T[k]+'</h2>';
+ if(k=="profil")h+='<div class="card"><div class="mr"><div class="av">'+avi()+'</div><div><b>'+esc(S.name)+'</b><div class="mu">Foto, avatar & nama</div></div></div><div class="row" style="margin-top:10px"><input id="ph" type="file" accept="image/*" style="display:none" onchange="pickPhoto(this)"><button class="btn s" onclick="$(\'ph\').click()">📷 Pilih foto dari galeri</button>'+(S.photo?'<button class="btn s" onclick="delPhoto()">Hapus foto</button>':'')+'</div><div class="mu" style="margin-top:10px">Atau pilih avatar</div><div class="pick">'+AV.map(function(a){return'<button class="'+(S.av==a?"on":"")+'" onclick="pick(\'av\',\''+a+'\')"><img src="'+FACE[a]+'" alt="" style="width:44px;height:44px;border-radius:50%;display:block"></button>'}).join("")+'</div><div class="row"><input id="nm" placeholder="Nama ('+esc(S.name)+')"><button class="btn s" onclick="setName()">Simpan</button></div></div>';
+ if(k=="diri")h+='<div class="card"><div class="row"><input id="ag" type="number" inputmode="numeric" placeholder="Umur ('+S.age+')"><input id="ht" type="number" inputmode="numeric" placeholder="Tinggi cm ('+S.ht+')"></div><div class="mu" style="margin:4px 0 6px">Jenis kelamin</div><div class="gl">'+["Pria","Wanita"].map(function(x){return'<button class="'+(S.sex==x?"on":"")+'" onclick="pick(\'sex\',\''+x+'\')">'+x+'</button>'}).join("")+'</div><button class="btn s" style="margin-top:10px" onclick="setBody()">Simpan data</button></div>';
+ if(k=="latihan")h+='<div class="card"><div class="mu" style="margin-bottom:6px">Hari latihan per minggu</div><div class="gl"><button onclick="stepWk(-1)">−</button><button class="on">'+S.wkt+' hari</button><button onclick="stepWk(1)">+</button></div></div>';
+ if(k=="berat")h+='<div class="card"><div class="row"><input id="gv" type="number" inputmode="decimal" placeholder="Target berat ('+S.goal+' kg)"><button class="btn s" onclick="setGoal()">Atur</button></div></div>';
+ if(k=="kalori")h+='<div class="card"><div class="row"><input id="cv" type="number" inputmode="numeric" placeholder="Target kalori ('+S.cal+')"><button class="btn s" onclick="setCal()">Atur</button></div></div>';
+ if(k=="tema")h+='<div class="card"><div class="mu">Pilih warna aksen aplikasi</div><div class="pick">'+COL.map(function(c){return'<button class="sw '+(S.acc==c?"on":"")+'" style="background:'+c+'" onclick="pick(\'acc\',\''+c+'\')"></button>'}).join("")+'</div></div>';
+ return h}
+function pEnd(){var bw=S.bw.length?S.bw[S.bw.length-1].v:0,h='';
+ if(bw&&S.ht){var b=bw/Math.pow(S.ht/100,2),c=b<18.5?"Kurus":b<25?"Normal":b<30?"Berlebih":"Obesitas",pos=Math.min(98,Math.max(1,(b-15)/25*100)),bmr=10*bw+6.25*S.ht-5*S.age+(S.sex=="Pria"?5:-161),td=Math.round(bmr*1.55);
+  h+='<h3>BMI & kalori</h3><div class="card"><div class="mr"><div class="big">'+b.toFixed(1)+'</div><div><b>'+c+'</b></div></div><div class="bmi"><i style="left:'+pos+'%"></i></div><div class="mu">Perkiraan kebutuhan kalori: <b>'+td+' kal/hari</b></div><button class="btn s" style="margin-top:8px" onclick="useCal('+td+')">Pakai sebagai target kalori</button></div>'}
+ var d=S.bw.slice(-12);h+='<h3>Grafik berat badan</h3><div class="card">';
+ if(d.length<2)h+='<div class="mu">Catat berat minimal 2 kali untuk melihat grafik.</div>';
+ else{var vs=d.map(function(x){return x.v}),mn=Math.min.apply(null,vs),mx=Math.max.apply(null,vs),rg=(mx-mn)||1,xy=d.map(function(x,i){return[10+i*280/(d.length-1),90-(x.v-mn)/rg*70]});
+  h+='<svg viewBox="0 0 300 100" width="100%"><polyline points="'+xy.map(function(p){return p.join(",")}).join(" ")+'" fill="none" stroke="var(--bl)" stroke-width="3" stroke-linejoin="round"/>'+xy.map(function(p){return'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="var(--bl)"/>'}).join("")+'</svg><div class="mu">'+mn+' – '+mx+' kg</div>'}
+ h+='</div>';
+ var bs=badges();h+='<h3>Lencana ('+bs.filter(function(x){return x[2]}).length+'/'+bs.length+')</h3><div class="mu" style="margin:-4px 0 10px">Lencana adalah penghargaan kecil yang terbuka saat kamu mencapai target tertentu. Ketuk lencana untuk melihat statusnya.</div><div class="grid" style="grid-template-columns:repeat(4,1fr)">'+bs.map(function(x){return'<div class="card bdg '+(x[2]?"":"off")+'" onclick="bpop(this,'+bs.indexOf(x)+')"><span>'+x[0]+'</span>'+x[1]+'</div>'}).join("")+'</div><div style="height:12px"></div>';
+ return h}
+function home(){
+ var bw=S.bw.length?S.bw[S.bw.length-1].v:0,first=S.bw.length?S.bw[0].v:0;
+ var pr=bw&&S.goal!=first?Math.max(0,Math.min(100,Math.round((bw-first)/(S.goal-first)*100))):0;
+ var last=S.logs.slice(-14),tv=last.reduce(function(a,l){return a+vol(l)},0);
+ var td=S.logs.filter(function(l){return day(l.t)==day()}).length;
+ var h='<h2>'+avs()+' Halo, '+esc(S.name)+'</h2><div class="wk"><div class="mu" style="color:#bfe8c8">Latihan hari ini</div><div class="big">'+td+' set tercatat</div><button class="btn g" style="margin-top:12px;background:#2bb55f" onclick="go(\'workout\')">Mulai latihan</button></div>';
+ h+=ring();h+='<h3>Target berat badan</h3><div class="card"><div class="mr"><div><div class="mu">Sekarang</div><div class="big">'+(bw||"-")+' kg</div></div><div style="text-align:right"><div class="mu">Target</div><div class="big">'+S.goal+' kg</div></div></div><div class="pg"><i style="width:'+pr+'%;background:var(--bl)"></i></div><div class="mu" style="margin-top:6px">'+pr+'% tercapai</div></div>';
+ h+='<h3>14 set terakhir</h3><div class="grid"><div class="card"><div class="mu">Volume</div><b>'+tv+' kg</b></div><div class="card"><div class="mu">Set</div><b>'+S.logs.length+'</b></div><div class="card"><div class="mu">Streak</div><b>'+streak()+' hari</b></div></div>';
+ h+='<h3>Kalender</h3><div class="cal">';var ds={};S.logs.forEach(function(l){ds[day(l.t)]=1});
+ for(var i=13;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);h+='<div class="'+(ds[day(d)]?"d ":"")+(i==0?"t":"")+'">'+d.getDate()+'</div>'}
+ return h+'</div>'}
+
+function workout(){
+ var h='<h2>Latihan</h2><div class="card"><select id="ex" onchange="prev()">'+EX.map(function(e){return'<option>'+e[0]+'</option>'}).join("")+'</select><div class="row"><input id="w" type="number" inputmode="decimal" placeholder="Beban (kg)" oninput="prev()"><input id="r" type="number" inputmode="numeric" placeholder="Repetisi" oninput="prev()"></div><div id="pv" class="card" style="background:#13112a"></div><button class="btn" onclick="addSet()">Tambah set</button><div class="mu" style="margin:12px 0 6px">Timer istirahat</div><div class="gl"><button onclick="rest(30)">30s</button><button onclick="rest(60)">60s</button><button onclick="rest(90)">90s</button><button onclick="rest(120)">2m</button></div></div><h3>Riwayat</h3><div class="card">';
+ var t=S.logs.map(function(l,i){return[l,i]}).reverse().slice(0,25);
+ if(!t.length)h+='<div class="mu">Belum ada set. Catat set pertamamu.</div>';
+ t.forEach(function(x){var l=x[0];h+='<div class="set"><div><b>'+esc(l.ex)+'</b><div class="mu">'+l.w+' kg × '+l.r+' · '+new Date(l.t).toLocaleDateString("id-ID")+'</div></div><button class="btn s" onclick="delSet('+x[1]+')">Hapus</button></div>'});
+ return h+'</div>'}
+
+function ranks(){
+ var h='<h2>Peringkat otot</h2><div class="mu" style="margin-bottom:12px">Peringkat naik sesuai total volume (beban × repetisi) tiap kelompok otot.</div>';
+ MG.forEach(function(g){var p=pts(g),i=tier(p),T=TIERS[i],nx=TIERS[i+1],pc=nx?Math.round((p-T[1])/(nx[1]-T[1])*100):100;
+  h+='<div class="card"><div class="mr"><div style="flex:none">'+shield(T[2],i,g,64)+'</div><div><b>'+g+'</b><div style="color:'+T[2]+';font-weight:800">'+T[0]+'</div><div class="pg"><i style="width:'+pc+'%;background:'+T[2]+'"></i></div><div class="mu">'+p+(nx?' / '+nx[1]:'')+' kg volume</div></div></div></div>'});
+ h+='<h3>Preview semua tingkatan</h3><div class="card">'+TIERS.map(function(t,i){var nx=TIERS[i+1];return'<div class="set"><div class="mr"><div style="flex:none">'+shield(t[2],i,null,40)+'</div><div><b style="color:'+t[2]+'">'+t[0]+'</b></div></div><div class="mu">'+t[1]+(nx?' – '+(nx[1]-1):'+')+' kg</div></div>'}).join("")+'</div>';
+ return h}
+
+var FOODS=[["Nasi putih (matang)",130,2.7,28,0.3],["Nasi merah (matang)",111,2.6,23,0.9],["Dada ayam rebus",165,31,0,3.6],["Ayam goreng",250,25,6,14],["Telur rebus",155,13,1.1,11],["Tempe mentah",193,20,9,11],["Tahu",76,8,2,4.8],["Daging sapi panggang",250,26,0,15],["Ikan tuna",116,26,0,1],["Oatmeal (matang)",68,2.4,12,1.4],["Roti tawar",265,9,49,3.2],["Kentang rebus",87,1.9,20,0.1],["Ubi rebus",86,1.6,20,0.1],["Pisang",89,1.1,23,0.3],["Apel",52,0.3,14,0.2],["Alpukat",160,2,9,15],["Brokoli",34,2.8,7,0.4],["Susu sapi",61,3.2,4.8,3.3],["Yogurt plain",61,3.5,4.7,3.3],["Kacang tanah",567,26,16,49],["Whey protein (bubuk)",400,80,8,6]];
+function fcalc(){var el=$("fv");if(!el)return;var f=FOODS[$("fx").value],g=num("fg");if(!g){el.innerHTML='<div class="mu">Isi berat (gram) untuk melihat nutrisinya.</div>';return}var k=g/100;el.innerHTML='<div class="big" style="color:var(--bl)">'+Math.round(f[1]*k)+' kal</div><div class="mu">Protein <b>'+(f[2]*k).toFixed(1)+' g</b> · Karbo <b>'+(f[3]*k).toFixed(1)+' g</b> · Lemak <b>'+(f[4]*k).toFixed(1)+' g</b></div><div class="mu">Per 100 g: '+f[1]+' kal · '+f[2]+' g protein</div>'}
+function addFood(){var f=FOODS[$("fx").value],g=num("fg");if(!g){alert("Isi berat makanan (gram)");return}var k=g/100;S.meals.push({n:f[0]+" "+g+" g",c:Math.round(f[1]*k),p:Math.round(f[2]*k*10)/10,cb:Math.round(f[3]*k*10)/10,f:Math.round(f[4]*k*10)/10,t:Date.now()});save();draw();toast("Ditambahkan ✅")}
+function nutrition(){
+ var tm=S.meals.map(function(m,i){return[m,i]}).filter(function(x){return day(x[0].t)==day()});
+ var c=tm.reduce(function(a,x){return a+x[0].c},0),p=tm.reduce(function(a,x){return a+(x[0].p||0)},0),rem=S.cal-c;
+ var h='<h2>Nutrisi</h2><div class="card"><div class="mr"><div><div class="big" style="color:var(--bl)">'+rem+'</div><div class="mu">kalori tersisa</div></div><div style="text-align:right"><div class="mu">Makan '+c+' · Protein '+p+' g</div></div></div><div class="pg"><i style="width:'+Math.min(100,Math.round(c/S.cal*100))+'%;background:var(--bl)"></i></div><div class="row" style="margin-top:10px"><input id="cv" type="number" placeholder="Target kalori ('+S.cal+')"><button class="btn s" onclick="setCal()">Ubah</button></div></div>';
+ h+=water();h+='<div class="card"><b>🧮 Kalkulator nutrisi</b><div class="mu" style="margin:2px 0 8px">Pilih makanan & berat, nutrisi dihitung otomatis</div><select id="fx" onchange="fcalc()">'+FOODS.map(function(f,i){return'<option value="'+i+'">'+f[0]+'</option>'}).join("")+'</select><input id="fg" type="number" inputmode="decimal" placeholder="Berat (gram)" oninput="fcalc()"><div id="fv" class="card" style="background:#13112a"></div><button class="btn" onclick="addFood()">Tambah ke catatan</button></div><div class="mu" style="margin:0 0 6px">Atau catat manual:</div>';h+='<div class="card"><input id="mn" placeholder="Nama makanan"><div class="row"><input id="mc" type="number" placeholder="Kalori"><input id="mp" type="number" placeholder="Protein (g)"></div><button class="btn" onclick="addMeal()">Tambah makanan</button></div><h3>Hari ini</h3><div class="card">';
+ if(!tm.length)h+='<div class="mu">Belum ada makanan dicatat hari ini.</div>';
+ tm.forEach(function(x){h+='<div class="set"><div><b>'+esc(x[0].n)+'</b><div class="mu">'+x[0].c+' kal · '+(x[0].p||0)+' g protein'+(x[0].cb!=null?' · '+x[0].cb+' g karbo · '+x[0].f+' g lemak':'')+'</div></div><button class="btn s" onclick="delMeal('+x[1]+')">Hapus</button></div>'});
+ return h+'</div>'}
+
+function profile(){
+ var l=lvOf(xp()),bw=S.bw.length?S.bw[S.bw.length-1].v:"-";
+ var h='<h2>Profil</h2><div class="card"><div class="mr"><div class="av" onclick="boom()">'+avi()+'</div><div><b style="font-size:20px">'+esc(S.name)+'</b><div class="mu">Lv.'+l+' · '+S.age+' th · '+S.ht+' cm · '+S.sex+'</div></div></div><button class="btn s" style="margin-top:10px" onclick="go(\'settings\')">⚙️ Buka pengaturan</button></div><div class="grid"><div class="card"><div class="mu">Level</div><b>⭐ '+l+'</b></div><div class="card"><div class="mu">XP</div><b>⚡ '+xp()+'</b></div><div class="card"><div class="mu">Streak</div><b>🔥 '+streak()+'</b></div></div>';
+ h+='<h3>Berat badan</h3><div class="card"><div class="big">'+bw+' kg</div><div class="row" style="margin-top:8px"><input id="bwv" type="number" inputmode="decimal" placeholder="Berat hari ini"><button class="btn s" onclick="addBW()">Catat</button></div><div class="row"><input id="gv" type="number" inputmode="decimal" placeholder="Target ('+S.goal+' kg)"><button class="btn s" onclick="setGoal()">Atur</button></div></div>';
+ return h+pEnd()}
+
+function draw(){
+ var l=lvOf(xp());
+ $("lv").innerHTML='<b>Lv.'+l+'</b><div class="bar"><i style="width:'+lvPct(xp())+'%"></i></div>';
+ $("st").innerHTML=avs()+" 🔥 "+streak();document.documentElement.style.setProperty("--bl",S.acc);
+ var T=[["home","🏠","Beranda"],["workout","🏋️","Latihan"],["ranks","⭐","Peringkat"],["nutrition","🍎","Nutrisi"],["profile","👤","Profil"],["settings","⚙️","Atur"]];
+ $("nv").innerHTML=T.map(function(t){return'<button class="'+(S.tab==t[0]?"on":"")+'" onclick="go(\''+t[0]+'\')"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join("");
+ var F={home:home,workout:workout,ranks:ranks,nutrition:nutrition,profile:profile,settings:settings};
+ var y=$("m").scrollTop;$("m").innerHTML=F[S.tab]();if(S.tab=="workout")prev();if(S.tab=="nutrition")fcalc();save();
+}
+draw();
+</script></body></html>
